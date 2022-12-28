@@ -8,3 +8,4 @@
 * logstash-logback-encoder를 사용해서 json 형태로 로그를 찍음
 * ControllerAdvice로 핸들링 할 수 있는 예외는 ResponseEntity로 응답을 보냄
 * 그 외의 예외는 filter에서 try-catch 문으로 처리
+* 로그 파일은 logs 폴더에 저장
