@@ -37,34 +37,22 @@ public class LoggingHttpMessage {
         this.responseWrapper = responseWrapper;
     }
 
-    //헤더 부분 따로 빼서 찍기?
     public void logHttpRequest() throws IOException {
         MultiValueMap<String, String> headers = getRequestHeaders();
         Map<String, String> parameters = getRequestParameters();
         String requestTime = millisToLocalDateTime(requestTimeMillis);
         String requestBody = new String(requestWrapper.getContentAsByteArray(), requestWrapper.getCharacterEncoding());
-        try {
-            Map requestBodyMap = stringToMapForJSON(requestBody);
-            logger.info("REQUEST",
-                    kv("request_id", requestWrapper.getRequestId()), kv("method", requestWrapper.getMethod()),
-                    kv("path", requestWrapper.getRequestURI()), kv("headers", headers),
-                    kv("parameters", parameters), kv("timestamp", requestTime),
-                    kv("body", requestBodyMap),
-                    kv("protocol", requestWrapper.getProtocol()), kv("url", requestWrapper.getRequestURL()),
-                    kv("remote_ip", requestWrapper.getRemoteAddr()), kv("remote_host", requestWrapper.getRemoteHost()),
-                    kv("remote_port", requestWrapper.getRemotePort())
-            );
-        } catch (JsonProcessingException e) {
-            logger.info("REQUEST",
-                    kv("request_id", requestWrapper.getRequestId()), kv("method", requestWrapper.getMethod()),
-                    kv("path", requestWrapper.getRequestURI()), kv("headers", headers),
-                    fields(new HttpBodyDTO(requestBody)),
-                    kv("parameters", parameters), kv("timestamp", requestTime),
-                    kv("protocol", requestWrapper.getProtocol()), kv("url", requestWrapper.getRequestURL()),
-                    kv("remote_ip", requestWrapper.getRemoteAddr()), kv("remote_host", requestWrapper.getRemoteHost()),
-                    kv("remote_port", requestWrapper.getRemotePort())
-            );
-        }
+
+        Map requestBodyMap = stringToMapForJSON(requestBody);
+        logger.info("REQUEST",
+                kv("request-id", requestWrapper.getRequestId()), kv("method", requestWrapper.getMethod()),
+                kv("path", requestWrapper.getRequestURI()), kv("headers", headers),
+                kv("parameters", parameters), kv("timestamp", requestTime),
+                kv("body", (requestBodyMap == null) ? new HttpBodyDTO(requestBody) : requestBodyMap),
+                kv("protocol", requestWrapper.getProtocol()), kv("url", requestWrapper.getRequestURL()),
+                kv("remote-ip", requestWrapper.getRemoteAddr()), kv("remote-host", requestWrapper.getRemoteHost()),
+                kv("remote-port", requestWrapper.getRemotePort())
+        );
     }
 
     public void logHttpResponse() {
@@ -72,24 +60,14 @@ public class LoggingHttpMessage {
         String responseTime = millisToLocalDateTime(responseTimeMillis);
         long turnaroundTimeMillis = responseTimeMillis - requestTimeMillis;
 
-        try {
-            Map responseBodyMap = stringToMapForJSON(responseBody);
-            logger.info("RESPONSE",
-                    kv("request_id", requestWrapper.getRequestId()), kv("status_code", statusCode),
-                    kv("path", requestWrapper.getRequestURI()), kv("headers", responseHeader),
-                    kv("timestamp", responseTime), kv("turnaround_time", turnaroundTimeMillis),
-                    kv("body", responseBodyMap),
-                    kv("url", requestWrapper.getRequestURL())
-            );
-        } catch (JsonProcessingException e) {
-            logger.info("RESPONSE",
-                    kv("request_id", requestWrapper.getRequestId()), kv("status_code", statusCode),
-                    kv("path", requestWrapper.getRequestURI()), kv("headers", responseHeader),
-                    kv("timestamp", responseTime), kv("turnaround_time", turnaroundTimeMillis),
-                    fields(new HttpBodyDTO(responseBody)),
-                    kv("url", requestWrapper.getRequestURL())
-            );
-        }
+        Map responseBodyMap = stringToMapForJSON(responseBody);
+        logger.info("RESPONSE",
+                kv("request-id", requestWrapper.getRequestId()), kv("status-code", statusCode),
+                kv("path", requestWrapper.getRequestURI()), kv("headers", responseHeader),
+                kv("timestamp", responseTime), kv("turnaround-time", turnaroundTimeMillis),
+                kv("body", (responseBodyMap == null) ? new HttpBodyDTO(responseBody) : responseBodyMap),
+                kv("url", requestWrapper.getRequestURL())
+        );
     }
 
     private MultiValueMap<String, String> getRequestHeaders() {
@@ -126,10 +104,13 @@ public class LoggingHttpMessage {
         );
     }
 
-    private Map stringToMapForJSON(String requestBody) throws JsonProcessingException {
+    private Map stringToMapForJSON(String requestBody)  {
         ObjectMapper mapper = new ObjectMapper();
-        Map map = new HashMap<>();
-        map = mapper.readValue(requestBody, Map.class);
+        Map map = null;
+        try {
+            map = mapper.readValue(requestBody, Map.class);
+        } catch (JsonProcessingException ignored) {
+        }
         return map;
     }
 

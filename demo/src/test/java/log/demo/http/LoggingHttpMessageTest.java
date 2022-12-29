@@ -93,7 +93,7 @@ class LoggingHttpMessageTest {
 
             switch (tuple.key) {
                 case "path" -> assertThat(tuple.value).isEqualTo("/get");
-                case "status_code" -> assertThat(tuple.value).isEqualTo("200");
+                case "status_code" -> assertThat(tuple.value).isEqualTo("200 OK");
                 case "headers" -> assertThat(tuple.value).isEqualTo("{get=[test], Content-Type=[text/plain]}");
                 case "turnaround_time" -> assertThat(tuple.value).isEqualTo("50");
                 case "url" -> assertThat(tuple.value).isEqualTo("http://localhost/get");
@@ -159,7 +159,7 @@ class LoggingHttpMessageTest {
 
             switch (tuple.key) {
                 case "path" -> assertThat(tuple.value).isEqualTo("/query");
-                case "status_code" -> assertThat(tuple.value).isEqualTo("200");
+                case "status_code" -> assertThat(tuple.value).isEqualTo("200 OK");
                 case "turnaround_time" -> assertThat(tuple.value).isEqualTo("50");
                 case "url" -> assertThat(tuple.value).isEqualTo("http://localhost/query");
             }
@@ -223,7 +223,7 @@ class LoggingHttpMessageTest {
 
             switch (tuple.key) {
                 case "path" -> assertThat(tuple.value).isEqualTo("/post");
-                case "status_code" -> assertThat(tuple.value).isEqualTo("201");
+                case "status_code" -> assertThat(tuple.value).isEqualTo("201 CREATED");
                 case "turnaround_time" -> assertThat(tuple.value).isEqualTo("100");
                 case "url" -> assertThat(tuple.value).isEqualTo("http://localhost/post");
             }
@@ -284,7 +284,7 @@ class LoggingHttpMessageTest {
 
             switch (tuple.key) {
                 case "path" -> assertThat(tuple.value).isEqualTo("/clientError");
-                case "status_code" -> assertThat(tuple.value).isEqualTo("404");
+                case "status_code" -> assertThat(tuple.value).isEqualTo("404 NOT_FOUND");
                 case "turnaround_time" -> assertThat(tuple.value).isEqualTo("100");
                 case "url" -> assertThat(tuple.value).isEqualTo("http://localhost/clientError");
             }
@@ -345,7 +345,7 @@ class LoggingHttpMessageTest {
 
             switch (tuple.key) {
                 case "path" -> assertThat(tuple.value).isEqualTo("/serverError");
-                case "status_code" -> assertThat(tuple.value).isEqualTo("500");
+                case "status_code" -> assertThat(tuple.value).isEqualTo("500 INTERNAL_SERVER_ERROR");
                 case "turnaround_time" -> assertThat(tuple.value).isEqualTo("100");
                 case "url" -> assertThat(tuple.value).isEqualTo("http://localhost/serverError");
             }
@@ -377,13 +377,4 @@ class LoggingHttpMessageTest {
 
     }
 
-    @Test
-    void httpStatus() {
-        int statusCode = 404;
-        String httpStatus = Optional
-                .ofNullable(HttpStatus.resolve(statusCode))
-                .map(HttpStatus::toString)
-                .orElse(String.valueOf(statusCode));
-        System.out.println(httpStatus);
-    }
 }
