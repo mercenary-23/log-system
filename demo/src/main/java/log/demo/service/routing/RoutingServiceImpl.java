@@ -16,7 +16,6 @@ import java.net.URISyntaxException;
 import java.util.Enumeration;
 
 
-//웬만하면 인터페이스로
 @Service
 @Slf4j
 public class RoutingServiceImpl implements RoutingService {

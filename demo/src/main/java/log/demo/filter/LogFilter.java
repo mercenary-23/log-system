@@ -34,6 +34,7 @@ public class LogFilter implements Filter {
             responseBody = new String(responseWrapper.getContentAsByteArray(), responseWrapper.getCharacterEncoding());
         } catch (Exception e) {
             statusCode = 502;
+            responseWrapper.setStatus(502);
             responseBody = e.getMessage();
         } finally {
             loggingHttpMessage.setStatusCode(statusCode);

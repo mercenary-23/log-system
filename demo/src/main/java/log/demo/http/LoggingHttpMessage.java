@@ -94,7 +94,6 @@ public class LoggingHttpMessage {
             String paramValue = requestWrapper.getParameter(paramName);
             params.put(paramName, paramValue);
         });
-
         return params;
     }
 
