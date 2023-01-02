@@ -1,7 +1,14 @@
 package log.demo.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import log.demo.service.routing.RoutingService;
+import log.demo.service.routing.dto.PassRequestDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(RoutingController.class)
 @Import(RoutingControllerTest.RoutingServiceTest.class)
@@ -103,8 +102,8 @@ class RoutingControllerTest {
 
     static class RoutingServiceTest implements RoutingService {
         @Override
-        public ResponseEntity<byte[]> passHttpRequest(byte[] body, HttpServletRequest request, String destHost) throws URISyntaxException {
-            return ResponseEntity.ok(body);
+        public ResponseEntity<byte[]> passHttpRequest(PassRequestDTO passRequestDTO) throws URISyntaxException {
+            return ResponseEntity.ok(passRequestDTO.getBody());
         }
     }
 
