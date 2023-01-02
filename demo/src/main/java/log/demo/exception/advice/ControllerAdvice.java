@@ -46,7 +46,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity<String> resourceAccessException(ResourceAccessException ex) {
-        final int code = ex.getMessage().contains("Read timed out") ? 504 : 500;
-        return new ResponseEntity<>("Internal Server Error", HttpStatusCode.valueOf(code));
+        final int code = ex.getMessage().contains("Read timed out") ? 504 : 502;
+        return new ResponseEntity<>("Bad Gateway", HttpStatusCode.valueOf(code));
     }
 }

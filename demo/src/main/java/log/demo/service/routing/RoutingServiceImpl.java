@@ -28,7 +28,6 @@ public class RoutingServiceImpl implements RoutingService {
     public ResponseEntity<byte[]> passHttpRequest(byte[] body, HttpServletRequest request,
         String destHost) throws URISyntaxException {
         final URI uri = makeURI(request, destHost);
-
         final HttpMethod httpMethod = HttpMethod.valueOf(request.getMethod());
         final MultiValueMap<String, String> headers = addHeader(request);
         final HttpEntity<byte[]> httpEntity = new HttpEntity<>(body, headers);
@@ -42,10 +41,9 @@ public class RoutingServiceImpl implements RoutingService {
     }
 
     private String makeDestURIString(HttpServletRequest request, String destHost) {
-        final String requestURI = request.getRequestURI();
-        final String originQueryString = request.getQueryString();
-        String uriString = destHost + requestURI;
-        uriString = (originQueryString == null) ? uriString : uriString + "?" + originQueryString;
+        String uriString = destHost + request.getRequestURI();
+        String queryString = request.getQueryString();
+        uriString = (queryString == null) ? uriString : uriString + "?" + queryString;
         return uriString;
     }
 

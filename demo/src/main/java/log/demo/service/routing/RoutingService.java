@@ -7,6 +7,6 @@ import java.net.URISyntaxException;
 
 public interface RoutingService {
 
-    ResponseEntity<byte[]> passHttpRequest(byte[] body, HttpServletRequest request,
-        String destHost) throws URISyntaxException;
+    ResponseEntity<byte[]> passHttpRequest(byte[] body, HttpServletRequest request, String destHost)
+        throws URISyntaxException;
 }
