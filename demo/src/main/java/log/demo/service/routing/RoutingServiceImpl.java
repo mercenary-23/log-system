@@ -27,7 +27,8 @@ public class RoutingServiceImpl implements RoutingService {
         this.restTemplate = restTemplate;
     }
 
-    public ResponseEntity<byte[]> passHttpRequest(byte[] body, HttpServletRequest request, String destHost) throws URISyntaxException {
+    public ResponseEntity<byte[]> passHttpRequest(byte[] body, HttpServletRequest request,
+        String destHost) throws URISyntaxException {
         URI uri = makeURI(request, destHost);
 
         HttpMethod httpMethod = HttpMethod.valueOf(request.getMethod());
@@ -53,7 +54,7 @@ public class RoutingServiceImpl implements RoutingService {
     private MultiValueMap<String, String> addHeader(HttpServletRequest request) {
         Enumeration<String> headerNames = request.getHeaderNames();
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        while(headerNames.hasMoreElements()) {
+        while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
             String headerValue = request.getHeader(headerName);
             headers.add(headerName, headerValue);

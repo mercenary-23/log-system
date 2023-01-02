@@ -18,11 +18,15 @@ public class LogFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException {
-        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper((HttpServletRequest) request);
-        ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper((HttpServletResponse) response);
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+        throws IOException {
+        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(
+            (HttpServletRequest) request);
+        ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(
+            (HttpServletResponse) response);
 
-        LoggingHttpMessage loggingHttpMessage = new LoggingHttpMessage(requestWrapper, responseWrapper);
+        LoggingHttpMessage loggingHttpMessage = new LoggingHttpMessage(requestWrapper,
+            responseWrapper);
         loggingHttpMessage.setRequestTimeMillis(System.currentTimeMillis());
 
         Integer statusCode = null;
@@ -31,11 +35,13 @@ public class LogFilter implements Filter {
         try {
             chain.doFilter(requestWrapper, responseWrapper);
             statusCode = responseWrapper.getStatus();
-            responseBody = new String(responseWrapper.getContentAsByteArray(), responseWrapper.getCharacterEncoding());
+            responseBody = new String(responseWrapper.getContentAsByteArray(),
+                responseWrapper.getCharacterEncoding());
         } catch (Exception e) {
-            statusCode = 502;
-            responseWrapper.setStatus(502);
+            statusCode = 500;
+            responseWrapper.setStatus(500);
             responseBody = e.getMessage();
+            e.printStackTrace();
         } finally {
             loggingHttpMessage.setStatusCode(statusCode);
             loggingHttpMessage.setResponseBody(responseBody);

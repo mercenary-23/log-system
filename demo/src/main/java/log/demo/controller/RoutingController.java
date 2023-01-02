@@ -24,10 +24,11 @@ public class RoutingController {
     private String destHost;
 
     @RequestMapping(value = "/**", method = {
-            RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS, RequestMethod.HEAD,
-            RequestMethod.TRACE, RequestMethod.DELETE, RequestMethod.PATCH, RequestMethod.PUT
+        RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS, RequestMethod.HEAD,
+        RequestMethod.TRACE, RequestMethod.DELETE, RequestMethod.PATCH, RequestMethod.PUT
     })
-    public ResponseEntity<byte[]> routes(@RequestBody(required = false) byte[] body, HttpServletRequest request) throws URISyntaxException {
+    public ResponseEntity<byte[]> routes(@RequestBody(required = false) byte[] body,
+        HttpServletRequest request) throws URISyntaxException {
         return routingService.passHttpRequest(body, request, destHost);
     }
 }

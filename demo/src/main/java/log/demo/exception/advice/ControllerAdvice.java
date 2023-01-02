@@ -46,6 +46,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity<String> resourceAccessException(ResourceAccessException ex) {
-        return new ResponseEntity<>("Network Error", HttpStatusCode.valueOf(500));
+        int code = ex.getMessage().contains("Read timed out") ? 504 : 500;
+        return new ResponseEntity<>("Internal Server Error", HttpStatusCode.valueOf(code));
     }
 }

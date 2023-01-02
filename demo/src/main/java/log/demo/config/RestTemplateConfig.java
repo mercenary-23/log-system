@@ -36,11 +36,13 @@ public class RestTemplateConfig {
     }
 
     private HttpClient getHttpClient(int readTimeoutMilliSeconds) {
-        SocketConfig socketConfig = SocketConfig.custom().setSoTimeout(Timeout.ofMilliseconds(readTimeoutMilliSeconds)).build();
-        PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create().setDefaultSocketConfig(socketConfig).build();
+        SocketConfig socketConfig = SocketConfig.custom()
+            .setSoTimeout(Timeout.ofMilliseconds(readTimeoutMilliSeconds)).build();
+        PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
+            .setDefaultSocketConfig(socketConfig).build();
         HttpClient client = HttpClientBuilder.create()
-                .setConnectionManager(connectionManager)
-                .build();
+            .setConnectionManager(connectionManager)
+            .build();
         return client;
     }
 }

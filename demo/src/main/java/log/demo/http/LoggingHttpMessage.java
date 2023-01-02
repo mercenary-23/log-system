@@ -19,20 +19,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static net.logstash.logback.argument.StructuredArguments.fields;
 import static net.logstash.logback.argument.StructuredArguments.kv;
 
 public class LoggingHttpMessage {
 
     private final ContentCachingRequestWrapper requestWrapper;
     private final ContentCachingResponseWrapper responseWrapper;
-    private String statusCode;
+    private int statusCode;
     private String responseBody;
     private long requestTimeMillis;
     private long responseTimeMillis;
     private final Logger logger = LoggerFactory.getLogger("HTTP");
 
-    public LoggingHttpMessage(ContentCachingRequestWrapper requestWrapper, ContentCachingResponseWrapper responseWrapper) {
+    public LoggingHttpMessage(ContentCachingRequestWrapper requestWrapper,
+        ContentCachingResponseWrapper responseWrapper) {
         this.requestWrapper = requestWrapper;
         this.responseWrapper = responseWrapper;
     }
@@ -41,17 +41,20 @@ public class LoggingHttpMessage {
         MultiValueMap<String, String> headers = getRequestHeaders();
         Map<String, String> parameters = getRequestParameters();
         String requestTime = millisToLocalDateTime(requestTimeMillis);
-        String requestBody = new String(requestWrapper.getContentAsByteArray(), requestWrapper.getCharacterEncoding());
+        String requestBody = new String(requestWrapper.getContentAsByteArray(),
+            requestWrapper.getCharacterEncoding());
 
-        Map requestBodyMap = stringToMapForJSON(requestBody);
+        Map requestBodyMap = stringToMapOrNullForJSON(requestBody);
         logger.info("REQUEST",
-                kv("request-id", requestWrapper.getRequestId()), kv("method", requestWrapper.getMethod()),
-                kv("path", requestWrapper.getRequestURI()), kv("headers", headers),
-                kv("parameters", parameters), kv("timestamp", requestTime),
-                kv("body", (requestBodyMap == null) ? new HttpBodyDTO(requestBody) : requestBodyMap),
-                kv("protocol", requestWrapper.getProtocol()), kv("url", requestWrapper.getRequestURL()),
-                kv("remote-ip", requestWrapper.getRemoteAddr()), kv("remote-host", requestWrapper.getRemoteHost()),
-                kv("remote-port", requestWrapper.getRemotePort())
+            kv("request-id", requestWrapper.getRequestId()),
+            kv("method", requestWrapper.getMethod()),
+            kv("path", requestWrapper.getRequestURI()), kv("headers", headers),
+            kv("parameters", parameters), kv("timestamp", requestTime),
+            kv("body", (requestBodyMap == null) ? new HttpBodyDTO(requestBody) : requestBodyMap),
+            kv("protocol", requestWrapper.getProtocol()), kv("url", requestWrapper.getRequestURL()),
+            kv("remote-ip", requestWrapper.getRemoteAddr()),
+            kv("remote-host", requestWrapper.getRemoteHost()),
+            kv("remote-port", requestWrapper.getRemotePort())
         );
     }
 
@@ -60,14 +63,16 @@ public class LoggingHttpMessage {
         String responseTime = millisToLocalDateTime(responseTimeMillis);
         long turnaroundTimeMillis = responseTimeMillis - requestTimeMillis;
 
-        Map responseBodyMap = stringToMapForJSON(responseBody);
+        Map responseBodyMap = stringToMapOrNullForJSON(responseBody);
         logger.info("RESPONSE",
-                kv("request-id", requestWrapper.getRequestId()), kv("status-code", statusCode),
-                kv("path", requestWrapper.getRequestURI()), kv("headers", responseHeader),
-                kv("timestamp", responseTime), kv("turnaround-time", turnaroundTimeMillis),
-                kv("body", (responseBodyMap == null) ? new HttpBodyDTO(responseBody) : responseBodyMap),
-                kv("url", requestWrapper.getRequestURL())
+            kv("request-id", requestWrapper.getRequestId()),
+            kv("status-code", statusCodeToString()),
+            kv("path", requestWrapper.getRequestURI()), kv("headers", responseHeader),
+            kv("timestamp", responseTime), kv("turnaround-time", turnaroundTimeMillis),
+            kv("body", (responseBodyMap == null) ? new HttpBodyDTO(responseBody) : responseBodyMap),
+            kv("url", requestWrapper.getRequestURL()), kv("code-type", getCodeType())
         );
+
     }
 
     private MultiValueMap<String, String> getRequestHeaders() {
@@ -99,11 +104,11 @@ public class LoggingHttpMessage {
 
     private String millisToLocalDateTime(long requestTimeMillis) {
         return new Timestamp(requestTimeMillis).toLocalDateTime().format(
-                DateTimeFormatter.ofPattern(DatePatternConst.LogTimeStampPattern)
+            DateTimeFormatter.ofPattern(DatePatternConst.LogTimeStampPattern)
         );
     }
 
-    private Map stringToMapForJSON(String requestBody)  {
+    private Map stringToMapOrNullForJSON(String requestBody) {
         ObjectMapper mapper = new ObjectMapper();
         Map map = null;
         try {
@@ -113,19 +118,30 @@ public class LoggingHttpMessage {
         return map;
     }
 
+    private String statusCodeToString() {
+        return Optional
+            .ofNullable(HttpStatus.resolve(statusCode))
+            .map(HttpStatus::toString)
+            .orElse(String.valueOf(statusCode));
+    }
+
+    private String getCodeType() {
+        int type = statusCode / 100;
+        return type + "XX";
+    }
+
     public void setStatusCode(int statusCode) {
-        this.statusCode = Optional
-                .ofNullable(HttpStatus.resolve(statusCode))
-                .map(HttpStatus::toString)
-                .orElse(String.valueOf(statusCode));
+        this.statusCode = statusCode;
     }
 
     public void setResponseBody(String responseBody) {
         this.responseBody = responseBody;
     }
+
     public void setRequestTimeMillis(long requestTimeMillis) {
         this.requestTimeMillis = requestTimeMillis;
     }
+
     public void setResponseTimeMillis(long responseTimeMillis) {
         this.responseTimeMillis = responseTimeMillis;
     }
