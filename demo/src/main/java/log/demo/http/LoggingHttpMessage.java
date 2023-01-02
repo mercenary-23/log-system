@@ -130,19 +130,14 @@ public class LoggingHttpMessage {
         return type + "XX";
     }
 
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
-    }
-
-    public void setResponseBody(String responseBody) {
-        this.responseBody = responseBody;
-    }
-
     public void setRequestTimeMillis(long requestTimeMillis) {
         this.requestTimeMillis = requestTimeMillis;
     }
 
-    public void setResponseTimeMillis(long responseTimeMillis) {
+    public void setCodeAndResBodyAndResTimeMillis(int statusCode, String responseBody,
+        long responseTimeMillis) {
+        this.statusCode = statusCode;
+        this.responseBody = responseBody;
         this.responseTimeMillis = responseTimeMillis;
     }
 

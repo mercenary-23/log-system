@@ -55,9 +55,7 @@ class LoggingHttpMessageTest {
         //LoggingHttpMessage
         LoggingHttpMessage loggingHttpMessage = new LoggingHttpMessage(requestWrapper, responseWrapper);
         loggingHttpMessage.setRequestTimeMillis(100);
-        loggingHttpMessage.setResponseTimeMillis(150);
-        loggingHttpMessage.setStatusCode(200);
-        loggingHttpMessage.setResponseBody("");
+        loggingHttpMessage.setCodeAndResBodyAndResTimeMillis(200, "", 150);
 
 
         //when
@@ -122,9 +120,7 @@ class LoggingHttpMessageTest {
         //LoggingHttpMessage
         LoggingHttpMessage loggingHttpMessage = new LoggingHttpMessage(requestWrapper, responseWrapper);
         loggingHttpMessage.setRequestTimeMillis(100);
-        loggingHttpMessage.setResponseTimeMillis(150);
-        loggingHttpMessage.setStatusCode(200);
-        loggingHttpMessage.setResponseBody("");
+        loggingHttpMessage.setCodeAndResBodyAndResTimeMillis(200, "", 150);
 
 
         //when
@@ -187,9 +183,7 @@ class LoggingHttpMessageTest {
         //LoggingHttpMessage
         LoggingHttpMessage loggingHttpMessage = new LoggingHttpMessage(requestWrapper, responseWrapper);
         loggingHttpMessage.setRequestTimeMillis(100);
-        loggingHttpMessage.setResponseTimeMillis(200);
-        loggingHttpMessage.setStatusCode(201);
-        loggingHttpMessage.setResponseBody("");
+        loggingHttpMessage.setCodeAndResBodyAndResTimeMillis(200, "", 200);
 
 
         //when
@@ -249,9 +243,7 @@ class LoggingHttpMessageTest {
         //LoggingHttpMessage
         LoggingHttpMessage loggingHttpMessage = new LoggingHttpMessage(requestWrapper, responseWrapper);
         loggingHttpMessage.setRequestTimeMillis(100);
-        loggingHttpMessage.setResponseTimeMillis(200);
-        loggingHttpMessage.setStatusCode(404);
-        loggingHttpMessage.setResponseBody("");
+        loggingHttpMessage.setCodeAndResBodyAndResTimeMillis(404, "", 200);
 
 
         //when
@@ -311,9 +303,7 @@ class LoggingHttpMessageTest {
         //LoggingHttpMessage
         LoggingHttpMessage loggingHttpMessage = new LoggingHttpMessage(requestWrapper, responseWrapper);
         loggingHttpMessage.setRequestTimeMillis(100);
-        loggingHttpMessage.setResponseTimeMillis(200);
-        loggingHttpMessage.setStatusCode(500);
-        loggingHttpMessage.setResponseBody("");
+        loggingHttpMessage.setCodeAndResBodyAndResTimeMillis(500, "", 200);
 
 
         //when

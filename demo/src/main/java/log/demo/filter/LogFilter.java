@@ -43,9 +43,7 @@ public class LogFilter implements Filter {
             responseBody = e.getMessage();
             e.printStackTrace();
         } finally {
-            loggingHttpMessage.setStatusCode(statusCode);
-            loggingHttpMessage.setResponseBody(responseBody);
-            loggingHttpMessage.setResponseTimeMillis(System.currentTimeMillis());
+            loggingHttpMessage.setCodeAndResBodyAndResTimeMillis(statusCode, responseBody, System.currentTimeMillis());
 
             loggingHttpMessage.logHttpRequest();
             loggingHttpMessage.logHttpResponse();
