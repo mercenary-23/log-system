@@ -38,13 +38,13 @@ public class LoggingHttpMessage {
     }
 
     public void logHttpRequest() throws IOException {
-        MultiValueMap<String, String> headers = getRequestHeaders();
-        Map<String, String> parameters = getRequestParameters();
-        String requestTime = millisToLocalDateTime(requestTimeMillis);
-        String requestBody = new String(requestWrapper.getContentAsByteArray(),
+        final MultiValueMap<String, String> headers = getRequestHeaders();
+        final Map<String, String> parameters = getRequestParameters();
+        final String requestTime = millisToLocalDateTime(requestTimeMillis);
+        final String requestBody = new String(requestWrapper.getContentAsByteArray(),
             requestWrapper.getCharacterEncoding());
 
-        Map<String, Object> requestBodyMap = stringToMapOrNullForJSON(requestBody);
+        final Map<String, Object> requestBodyMap = stringToMapOrNullForJSON(requestBody);
         logger.info("REQUEST",
             kv("request-id", requestWrapper.getRequestId()),
             kv("method", requestWrapper.getMethod()),
@@ -59,11 +59,11 @@ public class LoggingHttpMessage {
     }
 
     public void logHttpResponse() {
-        MultiValueMap<String, String> responseHeader = getResponseHeader();
-        String responseTime = millisToLocalDateTime(responseTimeMillis);
-        long turnaroundTimeMillis = responseTimeMillis - requestTimeMillis;
+        final MultiValueMap<String, String> responseHeader = getResponseHeader();
+        final String responseTime = millisToLocalDateTime(responseTimeMillis);
+        final long turnaroundTimeMillis = responseTimeMillis - requestTimeMillis;
 
-        Map responseBodyMap = stringToMapOrNullForJSON(responseBody);
+        final Map<String, Object> responseBodyMap = stringToMapOrNullForJSON(responseBody);
         logger.info("RESPONSE",
             kv("request-id", requestWrapper.getRequestId()),
             kv("status-code", statusCodeToString()),
@@ -76,7 +76,7 @@ public class LoggingHttpMessage {
     }
 
     private MultiValueMap<String, String> getRequestHeaders() {
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        final MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         requestWrapper.getHeaderNames().asIterator().forEachRemaining(headerName -> {
             String headerValue = requestWrapper.getHeader(headerName);
             headers.add(headerName, headerValue);
@@ -85,7 +85,7 @@ public class LoggingHttpMessage {
     }
 
     private MultiValueMap<String, String> getResponseHeader() {
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        final MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         responseWrapper.getHeaderNames().iterator().forEachRemaining(headerName -> {
             String headerValue = responseWrapper.getHeader(headerName);
             headers.add(headerName, headerValue);
@@ -94,7 +94,7 @@ public class LoggingHttpMessage {
     }
 
     private Map<String, String> getRequestParameters() {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         requestWrapper.getParameterNames().asIterator().forEachRemaining(paramName -> {
             String paramValue = requestWrapper.getParameter(paramName);
             params.put(paramName, paramValue);
@@ -109,7 +109,7 @@ public class LoggingHttpMessage {
     }
 
     private Map<String, Object> stringToMapOrNullForJSON(String requestBody) {
-        ObjectMapper mapper = new ObjectMapper();
+        final ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = null;
         try {
             map = mapper.readValue(requestBody, Map.class);

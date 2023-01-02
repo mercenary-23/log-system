@@ -20,12 +20,12 @@ public class LogFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws IOException {
-        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(
+        final ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(
             (HttpServletRequest) request);
-        ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(
+        final ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(
             (HttpServletResponse) response);
 
-        LoggingHttpMessage loggingHttpMessage = new LoggingHttpMessage(requestWrapper,
+        final LoggingHttpMessage loggingHttpMessage = new LoggingHttpMessage(requestWrapper,
             responseWrapper);
         loggingHttpMessage.setRequestTimeMillis(System.currentTimeMillis());
 

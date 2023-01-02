@@ -15,8 +15,8 @@ public class ControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity<String> httpClientErrorException(HttpClientErrorException ex) {
-        HttpStatusCode statusCode = ex.getStatusCode();
-        HttpStatus httpStatus = HttpStatus.resolve(statusCode.value());
+        final HttpStatusCode statusCode = ex.getStatusCode();
+        final HttpStatus httpStatus = HttpStatus.resolve(statusCode.value());
         String reason = "";
 
         if (httpStatus != null) {
@@ -28,8 +28,8 @@ public class ControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity<String> httpServerErrorException(HttpServerErrorException ex) {
-        HttpStatusCode statusCode = ex.getStatusCode();
-        HttpStatus httpStatus = HttpStatus.resolve(statusCode.value());
+        final HttpStatusCode statusCode = ex.getStatusCode();
+        final HttpStatus httpStatus = HttpStatus.resolve(statusCode.value());
         String reason = "";
 
         if (httpStatus != null) {
@@ -46,7 +46,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity<String> resourceAccessException(ResourceAccessException ex) {
-        int code = ex.getMessage().contains("Read timed out") ? 504 : 500;
+        final int code = ex.getMessage().contains("Read timed out") ? 504 : 500;
         return new ResponseEntity<>("Internal Server Error", HttpStatusCode.valueOf(code));
     }
 }

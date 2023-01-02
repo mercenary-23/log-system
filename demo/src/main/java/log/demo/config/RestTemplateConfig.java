@@ -17,18 +17,18 @@ import org.springframework.web.client.RestTemplate;
 public class RestTemplateConfig {
 
     @Value("${log.response.timeout}")
-    int responseTimeout;
+    private int responseTimeout;
 
     @Bean
     public RestTemplate restTemplate() {
-        HttpComponentsClientHttpRequestFactory httpRequestFactory = getHttpRequestFactory();
+        final HttpComponentsClientHttpRequestFactory httpRequestFactory = getHttpRequestFactory();
         return new RestTemplate(httpRequestFactory);
     }
 
     private HttpComponentsClientHttpRequestFactory getHttpRequestFactory() {
-        HttpClient client = getHttpClient(responseTimeout);
+        final HttpClient client = getHttpClient(responseTimeout);
 
-        HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+        final HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
         httpRequestFactory.setHttpClient(client);
         httpRequestFactory.setConnectionRequestTimeout(15000);
         httpRequestFactory.setConnectTimeout(15000);
@@ -36,11 +36,11 @@ public class RestTemplateConfig {
     }
 
     private HttpClient getHttpClient(int readTimeoutMilliSeconds) {
-        SocketConfig socketConfig = SocketConfig.custom()
+        final SocketConfig socketConfig = SocketConfig.custom()
             .setSoTimeout(Timeout.ofMilliseconds(readTimeoutMilliSeconds)).build();
-        PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
+        final PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
             .setDefaultSocketConfig(socketConfig).build();
-        HttpClient client = HttpClientBuilder.create()
+        final HttpClient client = HttpClientBuilder.create()
             .setConnectionManager(connectionManager)
             .build();
         return client;
