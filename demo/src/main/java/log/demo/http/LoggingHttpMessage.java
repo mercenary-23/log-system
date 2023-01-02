@@ -44,7 +44,10 @@ public class LoggingHttpMessage {
         final String requestBody = new String(requestWrapper.getContentAsByteArray(),
             requestWrapper.getCharacterEncoding());
 
-        final Map<String, Object> requestBodyMap = stringToMapOrNullForJSON(requestBody);
+        Map<String, Object> requestBodyMap = null;
+        if (isJSON(requestWrapper.getContentType())) {
+            requestBodyMap = stringToMapOrNullForJSON(requestBody);
+        }
         logger.info("REQUEST",
             kv("request-id", requestWrapper.getRequestId()),
             kv("method", requestWrapper.getMethod()),
@@ -63,7 +66,10 @@ public class LoggingHttpMessage {
         final String responseTime = millisToLocalDateTime(responseTimeMillis);
         final long turnaroundTimeMillis = responseTimeMillis - requestTimeMillis;
 
-        final Map<String, Object> responseBodyMap = stringToMapOrNullForJSON(responseBody);
+        Map<String, Object> responseBodyMap = null;
+        if (isJSON(responseWrapper.getContentType())) {
+            responseBodyMap = stringToMapOrNullForJSON(responseBody);
+        }
         logger.info("RESPONSE",
             kv("request-id", requestWrapper.getRequestId()),
             kv("status-code", statusCodeToString()),
@@ -106,6 +112,10 @@ public class LoggingHttpMessage {
         return new Timestamp(requestTimeMillis).toLocalDateTime().format(
             DateTimeFormatter.ofPattern(DatePatternConst.LogTimeStampPattern)
         );
+    }
+
+    private boolean isJSON(String contentType) {
+        return contentType != null && contentType.contains("application/json");
     }
 
     private Map<String, Object> stringToMapOrNullForJSON(String requestBody) {
