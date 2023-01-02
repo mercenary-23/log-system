@@ -5,5 +5,5 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class HttpBodyDTO {
 
-    public String content;
+    private String content;
 }

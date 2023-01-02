@@ -44,7 +44,7 @@ public class LoggingHttpMessage {
         String requestBody = new String(requestWrapper.getContentAsByteArray(),
             requestWrapper.getCharacterEncoding());
 
-        Map requestBodyMap = stringToMapOrNullForJSON(requestBody);
+        Map<String, Object> requestBodyMap = stringToMapOrNullForJSON(requestBody);
         logger.info("REQUEST",
             kv("request-id", requestWrapper.getRequestId()),
             kv("method", requestWrapper.getMethod()),
@@ -108,9 +108,9 @@ public class LoggingHttpMessage {
         );
     }
 
-    private Map stringToMapOrNullForJSON(String requestBody) {
+    private Map<String, Object> stringToMapOrNullForJSON(String requestBody) {
         ObjectMapper mapper = new ObjectMapper();
-        Map map = null;
+        Map<String, Object> map = null;
         try {
             map = mapper.readValue(requestBody, Map.class);
         } catch (JsonProcessingException ignored) {

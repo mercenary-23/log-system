@@ -97,6 +97,7 @@ class LoggingHttpMessageTest {
                 case "headers" -> assertThat(tuple.value).isEqualTo("{get=[test], Content-Type=[text/plain]}");
                 case "turnaround_time" -> assertThat(tuple.value).isEqualTo("50");
                 case "url" -> assertThat(tuple.value).isEqualTo("http://localhost/get");
+                case "code-type" -> assertThat(tuple.value).isEqualTo("2XX");
             }
         }
     }
@@ -162,6 +163,7 @@ class LoggingHttpMessageTest {
                 case "status_code" -> assertThat(tuple.value).isEqualTo("200 OK");
                 case "turnaround_time" -> assertThat(tuple.value).isEqualTo("50");
                 case "url" -> assertThat(tuple.value).isEqualTo("http://localhost/query");
+                case "code-type" -> assertThat(tuple.value).isEqualTo("2XX");
             }
         }
     }
@@ -226,6 +228,7 @@ class LoggingHttpMessageTest {
                 case "status_code" -> assertThat(tuple.value).isEqualTo("201 CREATED");
                 case "turnaround_time" -> assertThat(tuple.value).isEqualTo("100");
                 case "url" -> assertThat(tuple.value).isEqualTo("http://localhost/post");
+                case "code-type" -> assertThat(tuple.value).isEqualTo("2XX");
             }
         }
     }
@@ -287,6 +290,7 @@ class LoggingHttpMessageTest {
                 case "status_code" -> assertThat(tuple.value).isEqualTo("404 NOT_FOUND");
                 case "turnaround_time" -> assertThat(tuple.value).isEqualTo("100");
                 case "url" -> assertThat(tuple.value).isEqualTo("http://localhost/clientError");
+                case "code-type" -> assertThat(tuple.value).isEqualTo("4XX");
             }
         }
     }
@@ -348,6 +352,7 @@ class LoggingHttpMessageTest {
                 case "status_code" -> assertThat(tuple.value).isEqualTo("500 INTERNAL_SERVER_ERROR");
                 case "turnaround_time" -> assertThat(tuple.value).isEqualTo("100");
                 case "url" -> assertThat(tuple.value).isEqualTo("http://localhost/serverError");
+                case "code-type" -> assertThat(tuple.value).isEqualTo("5XX");
             }
         }
     }
