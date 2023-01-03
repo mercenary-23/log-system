@@ -2,6 +2,7 @@ package log.demo.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URISyntaxException;
+import java.util.Enumeration;
 import log.demo.service.routing.RoutingService;
 import log.demo.service.dto.PassRequestDTO;
 import lombok.RequiredArgsConstructor;
@@ -41,8 +42,9 @@ public class RoutingController {
     private MultiValueMap<String, String> getHeaders(HttpServletRequest request) {
         final MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         request.getHeaderNames().asIterator().forEachRemaining(headerName -> {
-            String headerValue = request.getHeader(headerName);
-            headers.add(headerName, headerValue);
+            Enumeration<String> headerValues = request.getHeaders(headerName);
+            headerValues.asIterator()
+                .forEachRemaining(headerValue -> headers.add(headerName, headerValue));
         });
         return headers;
     }

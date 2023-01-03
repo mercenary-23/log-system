@@ -1,7 +1,18 @@
 package log.demo.http;
 
+import static net.logstash.logback.argument.StructuredArguments.kv;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import log.demo.constant.DatePatternConst;
 import log.demo.http.dto.HttpBodyDTO;
 import org.slf4j.Logger;
@@ -11,15 +22,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
-
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import static net.logstash.logback.argument.StructuredArguments.kv;
 
 public class LoggingHttpMessage {
 
@@ -84,8 +86,9 @@ public class LoggingHttpMessage {
     private MultiValueMap<String, String> getRequestHeaders() {
         final MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         requestWrapper.getHeaderNames().asIterator().forEachRemaining(headerName -> {
-            String headerValue = requestWrapper.getHeader(headerName);
-            headers.add(headerName, headerValue);
+            Enumeration<String> headerValues = requestWrapper.getHeaders(headerName);
+            headerValues.asIterator()
+                .forEachRemaining(headerValue -> headers.add(headerName, headerValue));
         });
         return headers;
     }
@@ -93,8 +96,9 @@ public class LoggingHttpMessage {
     private MultiValueMap<String, String> getResponseHeader() {
         final MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         responseWrapper.getHeaderNames().iterator().forEachRemaining(headerName -> {
-            String headerValue = responseWrapper.getHeader(headerName);
-            headers.add(headerName, headerValue);
+            Collection<String> headerValues = responseWrapper.getHeaders(headerName);
+            headerValues.iterator()
+                .forEachRemaining(headerValue -> headers.add(headerName, headerValue));
         });
         return headers;
     }
@@ -122,7 +126,8 @@ public class LoggingHttpMessage {
         final ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = null;
         try {
-            map = mapper.readValue(requestBody, Map.class);
+            map = mapper.readValue(requestBody, new TypeReference<Map<String, Object>>() {
+            });
         } catch (JsonProcessingException ignored) {
         }
         return map;
