@@ -1,5 +1,8 @@
 package log.demo.exception.advice;
 
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+import org.apache.hc.client5.http.ConnectTimeoutException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +49,15 @@ public class ControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity<String> resourceAccessException(ResourceAccessException ex) {
-        final int code = ex.getMessage().contains("Read timed out") ? 504 : 502;
-        return new ResponseEntity<>("Bad Gateway", HttpStatusCode.valueOf(code));
+        Throwable cause = ex.getCause();
+        System.out.println(ex.getCause().toString());
+        int code = 502;
+        if (cause instanceof SocketTimeoutException) {
+            code = 504;
+        } else if (cause instanceof InterruptedException) {
+            code = 500;
+        }
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatusCode.valueOf(code));
     }
 }
