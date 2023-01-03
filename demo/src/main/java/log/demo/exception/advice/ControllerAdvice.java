@@ -50,7 +50,6 @@ public class ControllerAdvice {
     @ExceptionHandler
     public ResponseEntity<String> resourceAccessException(ResourceAccessException ex) {
         Throwable cause = ex.getCause();
-        System.out.println(ex.getCause().toString());
         int code = 502;
         if (cause instanceof SocketTimeoutException) {
             code = 504;
