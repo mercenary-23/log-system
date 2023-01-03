@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import log.demo.service.routing.RoutingService;
-import log.demo.service.routing.dto.PassRequestDTO;
+import log.demo.service.dto.PassRequestDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

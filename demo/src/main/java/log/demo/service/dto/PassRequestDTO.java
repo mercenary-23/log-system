@@ -1,4 +1,4 @@
-package log.demo.service.routing.dto;
+package log.demo.service.dto;
 
 import lombok.Builder;
 import lombok.Getter;
