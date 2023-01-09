@@ -1,16 +1,17 @@
 package log.demo.filter;
 
-import jakarta.servlet.*;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import log.demo.http.LoggingHttpMessage;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
-import java.io.IOException;
-
-@Slf4j
 public class LogFilter implements Filter {
 
     @Override
@@ -39,12 +40,12 @@ public class LogFilter implements Filter {
                 responseWrapper.getCharacterEncoding());
         } catch (Exception e) {
             statusCode = 500;
-            responseWrapper.setStatus(500);
+            responseWrapper.setStatus(statusCode);
             responseBody = e.getMessage();
             e.printStackTrace();
         } finally {
-            loggingHttpMessage.setCodeAndResBodyAndResTimeMillis(statusCode, responseBody, System.currentTimeMillis());
-
+            loggingHttpMessage.setCodeAndResBodyAndResTimeMillis(statusCode, responseBody,
+                System.currentTimeMillis());
             loggingHttpMessage.logHttpRequest();
             loggingHttpMessage.logHttpResponse();
 

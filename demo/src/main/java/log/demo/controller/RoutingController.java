@@ -3,20 +3,19 @@ package log.demo.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URISyntaxException;
 import java.util.Enumeration;
-import log.demo.service.routing.RoutingService;
 import log.demo.service.dto.PassRequestDTO;
+import log.demo.service.routing.RoutingService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@Slf4j
 @RequiredArgsConstructor
 public class RoutingController {
 
@@ -37,6 +36,11 @@ public class RoutingController {
             .headers(headers)
             .build();
         return routingService.passHttpRequest(passRequestDTO);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> doGet() {
+        return ResponseEntity.ok("get");
     }
 
     private MultiValueMap<String, String> getHeaders(HttpServletRequest request) {

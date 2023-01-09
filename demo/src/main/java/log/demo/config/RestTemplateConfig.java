@@ -31,9 +31,9 @@ public class RestTemplateConfig {
         final HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
         httpRequestFactory.setHttpClient(client);
         //대상 서버와 소켓 연결을 맺을 때 timeout 설정(3-way handshake)
-        httpRequestFactory.setConnectTimeout(3000);
-        //connection manager(connection pool)로부터 꺼내올 때의 timeout 설정
-        httpRequestFactory.setConnectionRequestTimeout(3000);
+        httpRequestFactory.setConnectTimeout(2000);
+        //connection manager(connection pool)로부터 connection을 꺼내올 때의 timeout 설정
+        httpRequestFactory.setConnectionRequestTimeout(2500);
         return httpRequestFactory;
     }
 
@@ -42,10 +42,12 @@ public class RestTemplateConfig {
         final SocketConfig socketConfig = SocketConfig.custom()
             .setSoTimeout(Timeout.ofMilliseconds(readTimeoutMilliSeconds)).build();
         final PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
-            .setDefaultSocketConfig(socketConfig).build();
-        final HttpClient client = HttpClientBuilder.create()
+            .setDefaultSocketConfig(socketConfig)
+            .setMaxConnTotal(200)
+            .setMaxConnPerRoute(200)
+            .build();
+        return HttpClientBuilder.create()
             .setConnectionManager(connectionManager)
             .build();
-        return client;
     }
 }

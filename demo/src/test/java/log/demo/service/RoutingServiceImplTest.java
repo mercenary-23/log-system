@@ -27,7 +27,6 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
 
 
-//테스트 케이스 좀 더 세세하게 분류
 class RoutingServiceImplTest {
 
     RestTemplate restTemplate = new RestTemplate();
@@ -52,9 +51,9 @@ class RoutingServiceImplTest {
         //given
         String path = "/get";
         mockServer.expect(requestTo(destHost + path))
-                .andExpect(method(HttpMethod.GET))
-                .andExpect(header("get", "test"))
-                .andRespond(withSuccess("Get Method Test Success", MediaType.TEXT_PLAIN));
+            .andExpect(method(HttpMethod.GET))
+            .andExpect(header("get", "test"))
+            .andRespond(withSuccess("Get Method Test Success", MediaType.TEXT_PLAIN));
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("get", "test");
@@ -63,7 +62,6 @@ class RoutingServiceImplTest {
             .uri(path)
             .method("GET")
             .build();
-
 
         //when
         ResponseEntity<byte[]> responseEntity = routingServiceImpl.passHttpRequest(passRequestDTO);
@@ -86,14 +84,13 @@ class RoutingServiceImplTest {
         String path = "/json";
         String body = "{\"name\": \"kim\",\"age\": 20,\"height\": 175.73}";
         mockServer.expect(requestTo(destHost + path))
-                .andExpect(method(HttpMethod.GET))
-                .andRespond(withSuccess(body, MediaType.APPLICATION_JSON));
+            .andExpect(method(HttpMethod.GET))
+            .andRespond(withSuccess(body, MediaType.APPLICATION_JSON));
 
         PassRequestDTO passRequestDTO = PassRequestDTO.builder()
             .uri(path)
             .method("GET")
             .build();
-
 
         //when
         ResponseEntity<byte[]> responseEntity = routingServiceImpl.passHttpRequest(passRequestDTO);
@@ -114,17 +111,16 @@ class RoutingServiceImplTest {
         //given
         String path = "/param";
         mockServer.expect(requestTo(destHost + path + "?p1=q1&p2=q2"))
-                .andExpect(method(HttpMethod.GET))
-                .andExpect(queryParam("p1", "q1"))
-                .andExpect(queryParam("p2", "q2"))
-                .andRespond(withSuccess());
+            .andExpect(method(HttpMethod.GET))
+            .andExpect(queryParam("p1", "q1"))
+            .andExpect(queryParam("p2", "q2"))
+            .andRespond(withSuccess());
 
         PassRequestDTO passRequestDTO = PassRequestDTO.builder()
             .uri(path)
             .method("GET")
             .queryString("p1=q1&p2=q2")
             .build();
-
 
         //when
         ResponseEntity<byte[]> responseEntity = routingServiceImpl.passHttpRequest(passRequestDTO);
@@ -146,9 +142,9 @@ class RoutingServiceImplTest {
         String path = "/post";
         String queryString = "p1=q1&p2=q2";
         mockServer.expect(requestTo(destHost + path + "?" + queryString))
-                .andExpect(method(HttpMethod.POST))
-                .andExpect(content().string("{\"name\": \"kim\",\"age\": 20}"))
-                .andRespond(withCreatedEntity(new URI(destHost + "/1")));
+            .andExpect(method(HttpMethod.POST))
+            .andExpect(content().string("{\"name\": \"kim\",\"age\": 20}"))
+            .andRespond(withCreatedEntity(new URI(destHost + "/1")));
 
         String body = "{\"name\": \"kim\",\"age\": 20}";
         PassRequestDTO passRequestDTO = PassRequestDTO.builder()
@@ -157,7 +153,6 @@ class RoutingServiceImplTest {
             .queryString(queryString)
             .body(body.getBytes(StandardCharsets.UTF_8))
             .build();
-
 
         //when
         ResponseEntity<byte[]> responseEntity = routingServiceImpl.passHttpRequest(passRequestDTO);
@@ -178,8 +173,8 @@ class RoutingServiceImplTest {
         //given
         String path = "/clientError";
         mockServer.expect(requestTo(destHost + path))
-                .andExpect(method(HttpMethod.GET))
-                .andRespond(withBadRequest());
+            .andExpect(method(HttpMethod.GET))
+            .andRespond(withBadRequest());
 
         PassRequestDTO passRequestDTO = PassRequestDTO.builder()
             .uri(path)
@@ -188,7 +183,7 @@ class RoutingServiceImplTest {
 
         //when && then
         assertThatThrownBy(() -> routingServiceImpl.passHttpRequest(passRequestDTO))
-                .isInstanceOf(HttpClientErrorException.class);
+            .isInstanceOf(HttpClientErrorException.class);
     }
 
     /*
@@ -202,8 +197,8 @@ class RoutingServiceImplTest {
         //given
         String path = "/serverError";
         mockServer.expect(requestTo(destHost + path))
-                .andExpect(method(HttpMethod.GET))
-                .andRespond(withGatewayTimeout());
+            .andExpect(method(HttpMethod.GET))
+            .andRespond(withGatewayTimeout());
 
         PassRequestDTO passRequestDTO = PassRequestDTO.builder()
             .uri(path)
@@ -212,7 +207,7 @@ class RoutingServiceImplTest {
 
         //when && then
         assertThatThrownBy(() -> routingServiceImpl.passHttpRequest(passRequestDTO))
-                .isInstanceOf(HttpServerErrorException.class);
+            .isInstanceOf(HttpServerErrorException.class);
     }
 
 }
